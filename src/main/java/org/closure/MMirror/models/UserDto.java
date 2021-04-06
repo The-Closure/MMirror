@@ -142,13 +142,13 @@ public class UserDto {
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", password='" + getPassword() + "'" +
-            ", created_at='" + getCreated_at() + "'" +
-            ", is_active='" + isIs_active() + "'" +
-            ", events='" + getEvents() + "'" +
+            " \"id\" : \"" + getId() + "\"" +
+            ", \"name\" : \"" + getName() + "\"" +
+            ", \"email\" : \"" + getEmail() + "\"" +
+            ", \"password\" : \"" + getPassword() + "\"" +
+            ", \"created_at\" : \"" + getCreated_at() + "\"" +
+            ", \"is_active\" : \"" + isIs_active() + "\"" +
+            ", \"events\" : \"" + getEvents() + "\"" +
             "}";
     }
 

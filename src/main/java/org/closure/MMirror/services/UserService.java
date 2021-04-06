@@ -20,7 +20,7 @@ public class UserService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public UserDto addUser(UserDto user)
+    public UserDto addUser(UserDto user) throws UserException
     {
         if(userRepo.findByEmail(user.getEmail()).isEmpty())
         {
@@ -51,10 +51,10 @@ public class UserService {
          
     }
 
-    public UserDto verifyAccount(String userID)
+    public UserDto verifyAccount(String userID) throws UserException
     {
         User user = userRepo.findById(userID).orElseThrow(() -> new UserException("no user with this id ..."));
-        user.setIs_active(true);
+        if(!user.getIs_active())  user.setIs_active(true); else throw new UserException("this user is already activated");
         user = userRepo.save(user);
         return new UserDto()
                 .created_at(user.getCreated_at())
@@ -71,6 +71,7 @@ public class UserService {
         User user = userRepo.findByEmail(email).orElseThrow(()-> new UserException("no user with this email ..."));
         if(user.getPassword().equals(password) ) 
         user.setIs_in(true); else throw new UserException("wrong password ...");
+        if(!user.getIs_active()) throw new UserException("please visit your email and verify your emial");
         user = userRepo.save(user);
         return new UserDto()
                 .created_at(user.getCreated_at())
@@ -91,13 +92,14 @@ public class UserService {
         return !user.getIs_in();
     }
 
-    public void sendEmail(String userID, String email)
+    private void sendEmail(String userID, String email)
     {
         SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom("anas.anas1998.tar@gmail.com");
         msg.setTo(email);
 
         msg.setSubject("Verfication mail (Magic Mirror)");
-        msg.setText("thanks for joining our platform \nplease verify your account by this link : http://localhost/users/home/verifyaccount/"+userID);
+        msg.setText("thanks for joining our platform \nplease verify your account by this link : http://localhost:8080/api/v2/users/home/verifyaccount/"+userID);
 
         javaMailSender.send(msg);
     }
