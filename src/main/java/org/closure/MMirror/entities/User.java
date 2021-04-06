@@ -25,6 +25,9 @@ public class User {
     private String email;
     private String password;
     private boolean google_account;
+    private boolean is_active;
+    //to check login and
+    private boolean is_in;
     private Instant created_at;
 
     @JsonIgnore
@@ -38,12 +41,14 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String email, String password, boolean google_account, Instant created_at, List<Event> events, Code code) {
+    public User(String id, String name, String email, String password, boolean google_account, boolean is_active, boolean is_in, Instant created_at, List<Event> events, Code code) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.google_account = google_account;
+        this.is_active = is_active;
+        this.is_in = is_in;
         this.created_at = created_at;
         this.events = events;
         this.code = code;
@@ -91,6 +96,30 @@ public class User {
 
     public void setGoogle_account(boolean google_account) {
         this.google_account = google_account;
+    }
+
+    public boolean isIs_active() {
+        return this.is_active;
+    }
+
+    public boolean getIs_active() {
+        return this.is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
+    public boolean isIs_in() {
+        return this.is_in;
+    }
+
+    public boolean getIs_in() {
+        return this.is_in;
+    }
+
+    public void setIs_in(boolean is_in) {
+        this.is_in = is_in;
     }
 
     public Instant getCreated_at() {
@@ -142,6 +171,16 @@ public class User {
         return this;
     }
 
+    public User is_active(boolean is_active) {
+        setIs_active(is_active);
+        return this;
+    }
+
+    public User is_in(boolean is_in) {
+        setIs_in(is_in);
+        return this;
+    }
+
     public User created_at(Instant created_at) {
         setCreated_at(created_at);
         return this;
@@ -165,12 +204,12 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && Objects.equals(created_at, user.created_at) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && is_active == user.is_active && is_in == user.is_in && Objects.equals(created_at, user.created_at) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, google_account, created_at, events, code);
+        return Objects.hash(id, name, email, password, google_account, is_active, is_in, created_at, events, code);
     }
 
     @Override
@@ -181,11 +220,12 @@ public class User {
             ", email='" + getEmail() + "'" +
             ", password='" + getPassword() + "'" +
             ", google_account='" + isGoogle_account() + "'" +
+            ", is_active='" + isIs_active() + "'" +
+            ", is_in='" + isIs_in() + "'" +
             ", created_at='" + getCreated_at() + "'" +
             ", events='" + getEvents() + "'" +
             ", code='" + getCode() + "'" +
             "}";
     }
-
 
 }

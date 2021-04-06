@@ -11,7 +11,7 @@ public class IdGeneration {
      static final SecureRandom secureRandom = new SecureRandom();
     
      
-     public String getNextRandomString(){
+     public static String getNextRandomString(){
          
          
          BigInteger bInt = new BigInteger(130, secureRandom);
