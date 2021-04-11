@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -22,6 +23,7 @@ public class User {
     private String id;
 
     private String name;
+    @Column(nullable = false, unique = true, length = 45)
     private String email;
     private String password;
     private boolean google_account;
@@ -29,6 +31,7 @@ public class User {
     //to check login and
     private boolean is_in;
     private Instant created_at;
+    private String google_token;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", targetEntity = Event.class)
@@ -37,11 +40,10 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private Code code;
 
-
     public User() {
     }
 
-    public User(String id, String name, String email, String password, boolean google_account, boolean is_active, boolean is_in, Instant created_at, List<Event> events, Code code) {
+    public User(String id, String name, String email, String password, boolean google_account, boolean is_active, boolean is_in, Instant created_at, String google_token, List<Event> events, Code code) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -50,6 +52,7 @@ public class User {
         this.is_active = is_active;
         this.is_in = is_in;
         this.created_at = created_at;
+        this.google_token = google_token;
         this.events = events;
         this.code = code;
     }
@@ -130,6 +133,14 @@ public class User {
         this.created_at = created_at;
     }
 
+    public String getGoogle_token() {
+        return this.google_token;
+    }
+
+    public void setGoogle_token(String google_token) {
+        this.google_token = google_token;
+    }
+
     public List<Event> getEvents() {
         return this.events;
     }
@@ -186,6 +197,11 @@ public class User {
         return this;
     }
 
+    public User google_token(String google_token) {
+        setGoogle_token(google_token);
+        return this;
+    }
+
     public User events(List<Event> events) {
         setEvents(events);
         return this;
@@ -204,12 +220,12 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && is_active == user.is_active && is_in == user.is_in && Objects.equals(created_at, user.created_at) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && is_active == user.is_active && is_in == user.is_in && Objects.equals(created_at, user.created_at) && Objects.equals(google_token, user.google_token) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, google_account, is_active, is_in, created_at, events, code);
+        return Objects.hash(id, name, email, password, google_account, is_active, is_in, created_at, google_token, events, code);
     }
 
     @Override
@@ -223,6 +239,7 @@ public class User {
             ", is_active='" + isIs_active() + "'" +
             ", is_in='" + isIs_in() + "'" +
             ", created_at='" + getCreated_at() + "'" +
+            ", google_token='" + getGoogle_token() + "'" +
             ", events='" + getEvents() + "'" +
             ", code='" + getCode() + "'" +
             "}";

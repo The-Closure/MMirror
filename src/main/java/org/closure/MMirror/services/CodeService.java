@@ -25,12 +25,12 @@ public class CodeService {
     @Autowired 
     private UserRepo userRepo;
     
-    public Long generateCode() throws Exception
+    public String generateCode() throws CodeException
     {
         Optional<Code> value = null;
-        Long code = null;
+        String code = null;
         do{
-            code = Long.valueOf((long)Math.random()*1000);
+            code = Double.valueOf((double)Math.random()*10000).longValue()+"";
             value = codeRepo.findByCode(code);
 
         }while(value.isPresent());
@@ -53,12 +53,14 @@ public class CodeService {
     {
         Optional<Code> code = null;
         User user = null;
-        if((code = codeRepo.findById(Long.valueOf(code_value))).isPresent() && (user = userRepo.findById(userID).orElseThrow(()-> new UserException("no user with this id ..."))).getCode() != null)
+        if((code = codeRepo.findById(code_value)).isPresent())
         {
             if(code.get().getUser() == null && code.get().getExpire_at().isAfter(Instant.now()))
             {
-            user = user.code(code.get());
-            userRepo.save(user);
+            user = (userRepo.findById(userID).orElseThrow(()-> new UserException("no user with this id")));
+            Code entity = code.get();
+            entity.setUser(user);
+            codeRepo.save(entity);
             }
             else
             {

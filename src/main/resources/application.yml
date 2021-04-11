@@ -1,0 +1,52 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+
+server:
+  port: 8080
+#   servlet:
+#     context-path: /techgeeknext
+#     session:
+#       cookie:
+#         path: /techgeeknext
+  ssl:
+    key-store-password: techgeeknext123
+    key-store: classpath:securitykeystore.p12
+    key-store-type: PKCS12
+    key-alias: techgeeknext-alias
+
+
+
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 965999691956-p90targvpar84ahoppos3c11lqcab4e8.apps.googleusercontent.com
+            client-secret: eioNq1OB9uWoWVkxwScSu40u
+            scope: profile,email,https://www.googleapis.com/auth/calendar
+            client-name: MMirror_App
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mmirror?createDatabaseIfNotExist=true
+    username: root
+    password: 
+  mail:
+    host: mail.smart-mira.com
+    port: 587
+    username: support@smart-mira.com
+    password: P@ssw0rd123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls: 
+            enable: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+closure: 
+  codeGenerationError: "something went wrong while generationg your code, be  calm we are working on it."

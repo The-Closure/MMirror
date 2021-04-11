@@ -14,12 +14,12 @@ import javax.persistence.Table;
 public class Event {
 
     @Id
-    private String id;
-    private String title;
-    private String summery;
-    private Instant start;
-    private Instant end;
-    private String candidates;
+    String id;
+    String title;
+    String summery;
+    Instant start;
+    Instant end;
+    String candidates;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", nullable = false)

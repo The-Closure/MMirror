@@ -1,5 +1,6 @@
 package org.closure.MMirror.models;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public class EventDto {
@@ -9,17 +10,20 @@ public class EventDto {
     private String title;
     private String user_id;
     private String user_name;
-
+    private Instant start;
+    private Instant end;
 
     public EventDto() {
     }
 
-    public EventDto(String id, String summery, String title, String user_id, String user_name) {
+    public EventDto(String id, String summery, String title, String user_id, String user_name, Instant start, Instant end) {
         this.id = id;
         this.summery = summery;
         this.title = title;
         this.user_id = user_id;
         this.user_name = user_name;
+        this.start = start;
+        this.end = end;
     }
 
     public String getId() {
@@ -62,6 +66,22 @@ public class EventDto {
         this.user_name = user_name;
     }
 
+    public Instant getStart() {
+        return this.start;
+    }
+
+    public void setStart(Instant start) {
+        this.start = start;
+    }
+
+    public Instant getEnd() {
+        return this.end;
+    }
+
+    public void setEnd(Instant end) {
+        this.end = end;
+    }
+
     public EventDto id(String id) {
         setId(id);
         return this;
@@ -87,6 +107,16 @@ public class EventDto {
         return this;
     }
 
+    public EventDto start(Instant start) {
+        setStart(start);
+        return this;
+    }
+
+    public EventDto end(Instant end) {
+        setEnd(end);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -95,25 +125,25 @@ public class EventDto {
             return false;
         }
         EventDto eventDto = (EventDto) o;
-        return Objects.equals(id, eventDto.id) && Objects.equals(summery, eventDto.summery) && Objects.equals(title, eventDto.title) && Objects.equals(user_id, eventDto.user_id) && Objects.equals(user_name, eventDto.user_name);
+        return Objects.equals(id, eventDto.id) && Objects.equals(summery, eventDto.summery) && Objects.equals(title, eventDto.title) && Objects.equals(user_id, eventDto.user_id) && Objects.equals(user_name, eventDto.user_name) && Objects.equals(start, eventDto.start) && Objects.equals(end, eventDto.end);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, summery, title, user_id, user_name);
+        return Objects.hash(id, summery, title, user_id, user_name, start, end);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", summery='" + getSummery() + "'" +
-            ", title='" + getTitle() + "'" +
-            ", user_id='" + getUser_id() + "'" +
-            ", user_name='" + getUser_name() + "'" +
+            " \"id\":\"" + getId() + "\"" +
+            ", \"summery\":\"" + getSummery() + "\"" +
+            ", \"title\":\"" + getTitle() + "\"" +
+            ", \"user_id\":\"" + getUser_id() + "\"" +
+            ", \"user_name\":\"" + getUser_name() + "\"" +
+            ", \"start\":\"" + getStart() + "\"" +
+            ", \"end\":\"" + getEnd() + "\"" +
             "}";
     }
 
-
-    
 }

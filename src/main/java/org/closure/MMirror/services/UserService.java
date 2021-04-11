@@ -34,7 +34,8 @@ public class UserService {
                 .is_in(true)
                 .is_active(false);
             entity = userRepo.save(entity);
-            sendEmail(entity.getId(), entity.getEmail());
+            // sendEmail(entity.getId(), entity.getEmail()); 
+            //TODO : ACTIVE IT IN PRODUCTION
             return new UserDto()
                 .created_at(entity.getCreated_at())
                 .email(entity.getEmail())
@@ -92,10 +93,10 @@ public class UserService {
         return !user.getIs_in();
     }
 
-    private void sendEmail(String userID, String email)
+    public void sendEmail(String userID, String email)
     {
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("anas.anas1998.tar@gmail.com");
+        msg.setFrom("support@smart-mira.com");
         msg.setTo(email);
 
         msg.setSubject("Verfication mail (Magic Mirror)");

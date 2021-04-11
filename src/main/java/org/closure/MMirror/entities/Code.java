@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Code {
 
     @Id
-    private Long code;
+    private String code;
 
     private Instant created_at;
     private Instant expire_at;
@@ -28,18 +28,18 @@ public class Code {
     public Code() {
     }
 
-    public Code(Long code, Instant created_at, Instant expire_at, User user) {
+    public Code(String code, Instant created_at, Instant expire_at, User user) {
         this.code = code;
         this.created_at = created_at;
         this.expire_at = expire_at;
         this.user = user;
     }
 
-    public Long getCode() {
+    public String getCode() {
         return this.code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -67,7 +67,7 @@ public class Code {
         this.user = user;
     }
 
-    public Code code(Long code) {
+    public Code code(String code) {
         setCode(code);
         return this;
     }
