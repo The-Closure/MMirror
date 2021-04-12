@@ -163,6 +163,25 @@ public class ViewController {
             return "index";}
     }
     
+    
+
+    @PostMapping(value="/add_event_process")
+    public String addEvent(EventDto event, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            
+            event = eventService.addEvent(request.getSession().getAttribute("clientID")+"", event);
+            return "redirect:/events";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "redirect:/addevent";
+        }
+    }
+    @GetMapping(value="/addevent")
+    public String getMethodName(Model model) {
+        model.addAttribute("event", new EventDto());
+        return "add_event";
+    }
+    
 
 //     @GetMapping("/home")
 //     public String Home(Model model, HttpSession session) {

@@ -1,6 +1,5 @@
 package org.closure.MMirror.entities;
 
-import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -8,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "events")
@@ -17,8 +18,8 @@ public class Event {
     String id;
     String title;
     String summery;
-    Instant start;
-    Instant end;
+    String start;
+    String end;
     String candidates;
 
     @ManyToOne(targetEntity = User.class)
@@ -28,7 +29,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String id, String title, String summery, Instant start, Instant end, String candidates, User user) {
+    public Event(String id, String title, String summery,String start,String end, String candidates, User user) {
         this.id = id;
         this.title = title;
         this.summery = summery;
@@ -62,19 +63,19 @@ public class Event {
         this.summery = summery;
     }
 
-    public Instant getStart() {
+    public String getStart() {
         return this.start;
     }
 
-    public void setStart(Instant start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Instant getEnd() {
+    public String getEnd() {
         return this.end;
     }
 
-    public void setEnd(Instant end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
@@ -109,12 +110,12 @@ public class Event {
         return this;
     }
 
-    public Event start(Instant start) {
+    public Event start(String start) {
         setStart(start);
         return this;
     }
 
-    public Event end(Instant end) {
+    public Event end(String end) {
         setEnd(end);
         return this;
     }

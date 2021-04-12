@@ -1,5 +1,6 @@
 package org.closure.MMirror.services;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class EventService {
     public EventDto addEvent(String userID, EventDto event) throws Exception
     {
         User user = userRepo.findById(userID).orElseThrow(()-> new UserException("no user with this id..."));
+        event.start(event.getStart().replace("/", "-"));
+        event.end(event.getEnd().replace("/", "-"));
         Event entity = new Event()
             .id(IdGeneration.getNextRandomString())
             .summery(event.getSummery())
@@ -41,7 +44,7 @@ public class EventService {
     public List<EventDto> getEvents(String userID) throws UserException
     {
        List<String> eventIds = userRepo.findById(userID).orElseThrow(()-> new UserException("no user with this id...")).getEvents().stream().map((e)-> e.getId()).toList();
-       return  IteratorUtils.toList(eventRepo.findAllById(eventIds).iterator()).stream().map((e)-> new EventDto().end(e.getEnd()).id(e.getId()).start(e.getStart()).title(e.getTitle()).summery(e.getSummery())).toList();
+       return  IteratorUtils.toList(eventRepo.findAllById(eventIds).iterator()).stream().map((e)-> new EventDto().end(e.getEnd().toString()).id(e.getId()).start(e.getStart().toString()).title(e.getTitle()).summery(e.getSummery())).toList();
        // return eventRepo.findAllById(eventIds).iterator().forEachRemaining((new ArrayList<String>())::add);
     }
 

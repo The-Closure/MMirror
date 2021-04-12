@@ -1,7 +1,9 @@
 package org.closure.MMirror.models;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class EventDto {
 
@@ -10,13 +12,13 @@ public class EventDto {
     private String title;
     private String user_id;
     private String user_name;
-    private Instant start;
-    private Instant end;
+    private String start;
+    private String end;
 
     public EventDto() {
     }
 
-    public EventDto(String id, String summery, String title, String user_id, String user_name, Instant start, Instant end) {
+    public EventDto(String id, String summery, String title, String user_id, String user_name, String start, String end) {
         this.id = id;
         this.summery = summery;
         this.title = title;
@@ -66,19 +68,19 @@ public class EventDto {
         this.user_name = user_name;
     }
 
-    public Instant getStart() {
+    public String getStart() {
         return this.start;
     }
 
-    public void setStart(Instant start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Instant getEnd() {
+    public String getEnd() {
         return this.end;
     }
 
-    public void setEnd(Instant end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
@@ -107,12 +109,12 @@ public class EventDto {
         return this;
     }
 
-    public EventDto start(Instant start) {
+    public EventDto start(String start) {
         setStart(start);
         return this;
     }
 
-    public EventDto end(Instant end) {
+    public EventDto end(String end) {
         setEnd(end);
         return this;
     }
@@ -136,13 +138,13 @@ public class EventDto {
     @Override
     public String toString() {
         return "{" +
-            " \"id\":\"" + getId() + "\"" +
-            ", \"summery\":\"" + getSummery() + "\"" +
-            ", \"title\":\"" + getTitle() + "\"" +
-            ", \"user_id\":\"" + getUser_id() + "\"" +
-            ", \"user_name\":\"" + getUser_name() + "\"" +
-            ", \"start\":\"" + getStart() + "\"" +
-            ", \"end\":\"" + getEnd() + "\"" +
+            " id='" + getId() + "'" +
+            ", summery='" + getSummery() + "'" +
+            ", title='" + getTitle() + "'" +
+            ", user_id='" + getUser_id() + "'" +
+            ", user_name='" + getUser_name() + "'" +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
             "}";
     }
 
