@@ -3,6 +3,8 @@ package org.closure.MMirror.services;
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.closure.MMirror.Exceptions.CodeException;
 import org.closure.MMirror.Exceptions.UserException;
@@ -43,7 +45,7 @@ public class CodeService {
     public boolean deleteCodes()
     {
         List<Code> codes = codeRepo.findAll();
-        codes = codes.stream().filter((code) -> code.getExpire_at().isAfter(Instant.now())).toList();
+        codes = codes.stream().filter((code) -> code.getExpire_at().isAfter(Instant.now())).collect(Collectors.toList());
         codeRepo.deleteAll();
         codeRepo.saveAll(codes);
         return true;

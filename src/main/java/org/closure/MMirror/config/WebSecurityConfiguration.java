@@ -58,7 +58,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().disable().csrf().disable().formLogin().loginPage("/login").and()
         .logout().logoutSuccessUrl("/login")
                 .and().oauth2Login().loginPage("/login")
-                .successHandler(oauth2authSuccessHandler);
+                .successHandler(oauth2authSuccessHandler).and();
 
         http.headers().frameOptions().disable();
     }

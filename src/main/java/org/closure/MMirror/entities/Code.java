@@ -88,17 +88,6 @@ public class Code {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Code)) {
-            return false;
-        }
-        Code code = (Code) o;
-        return Objects.equals(code, code.code) && Objects.equals(created_at, code.created_at) && Objects.equals(expire_at, code.expire_at) && Objects.equals(user, code.user);
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(code, created_at, expire_at, user);
     }

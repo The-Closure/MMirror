@@ -15,7 +15,7 @@
 	<description>backend application to support our magic mirror devices around the world </description>
 	<properties>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
 	</properties>
 	<dependencies>
 		

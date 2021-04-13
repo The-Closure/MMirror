@@ -34,7 +34,7 @@ public class UserService {
                 .is_in(true)
                 .is_active(false);
             entity = userRepo.save(entity);
-            // sendEmail(entity.getId(), entity.getEmail()); 
+            sendEmail(entity.getId(), entity.getEmail()); 
             //TODO : ACTIVE IT IN PRODUCTION
             return new UserDto()
                 .created_at(entity.getCreated_at())
@@ -100,7 +100,7 @@ public class UserService {
         msg.setTo(email);
 
         msg.setSubject("Verfication mail (Magic Mirror)");
-        msg.setText("thanks for joining our platform \nplease verify your account by this link : http://localhost:8080/api/v2/users/home/verifyaccount/"+userID);
+        msg.setText("thanks for joining our platform \nplease verify your account by this link : https://localhost:8080/api/v2/users/home/verifyaccount/"+userID);
 
         javaMailSender.send(msg);
     }
