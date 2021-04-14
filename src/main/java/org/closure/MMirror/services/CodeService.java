@@ -74,4 +74,9 @@ public class CodeService {
         }
         return true;
     }
+
+    public String idByCode(String code) throws CodeException
+    {
+        return codeRepo.findByCode(code).orElseThrow(()-> new CodeException("no code with this id...")).getUser().getId();
+    }
 }

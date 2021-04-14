@@ -1,7 +1,5 @@
 package org.closure.MMirror.controllers;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.ServletRequest;
 
@@ -39,7 +37,7 @@ public class EventCotroller {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(eventService.getEvents(userID));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK).body(Stream.of(e.getMessage()).collect(Collectors.toList()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
