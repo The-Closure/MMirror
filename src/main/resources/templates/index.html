@@ -12,9 +12,7 @@
       background: white;
       color: #444;
       width: 190px;
-      border-radius: 5px;
-      border: thin solid #888;
-      box-shadow: 1px 1px 1px grey;
+      
       white-space: nowrap;
     }
 
@@ -114,13 +112,15 @@
               </div>
               <div>
                 <div id="gSignInWrapper">
-                  <a th:href="@{/login/oauth2/authorization/google}">
-                    <div id="customBtn" class="customGPlusSignIn">
+                  <button id="gSignInWrapper" onclick="location.href='oauth2/authorization/google'" type="button"
+                    style="background: white;">
+                    <div id="customBtn" class="customGPlusSignIn"
+                      style="background: transparent; width: 117px; height: 25px; border-color: transparent;">
                       <img src="https://maxcdn.icons8.com/Share/icon/Logos/google_logo1600.png"
-                        style="width: 10%; height: 1%;" />
-                      <span class="buttonText">Google</span>
+                        style="width: 10%;height: 49%;">
+                      <span class="">Google</span>
                     </div>
-                  </a>
+                  </button>
                 </div>
               </div>
 

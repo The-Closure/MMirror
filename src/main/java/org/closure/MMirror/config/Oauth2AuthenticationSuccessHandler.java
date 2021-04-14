@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.closure.MMirror.entities.Event;
 import org.closure.MMirror.entities.User;
-import org.closure.MMirror.models.GoogleEvent;
+import org.closure.MMirror.models.google_event.GoogleEvent;
 import org.closure.MMirror.models.GoogleEvents;
+import org.closure.MMirror.repositories.EventRepo;
 import org.closure.MMirror.repositories.UserRepo;
 import org.closure.MMirror.services.IdGeneration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,22 +46,22 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 	private UserRepo userRepository;
 
 	@Autowired
+	private EventRepo eventRepo;
+
+	@Autowired
 	private PasswordEncoder encoder;
 
 	
 	
 
 
+	User u = null;
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-										Authentication authentication) throws IOException, ServletException {
+	Authentication authentication) throws IOException, ServletException {
 		OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
-		authenticationToken.getPrincipal().getAttributes().forEach((key, value)->System.out.println(key+" : "+value));
-		String firstName = null;
+		String firstName = authenticationToken.getPrincipal().getAttributes().get("name").toString();
 		OAuth2AuthorizedClient auth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(authenticationToken.getAuthorizedClientRegistrationId(), authenticationToken.getPrincipal().getName());
-		System.out.println("!!!!! access token is : "+auth2AuthorizedClient.getAccessToken().getTokenValue());
-		User u = null;
-		if ((u = userRepository.findByName(authentication.getName())) == null) {
-			firstName = authenticationToken.getPrincipal().getAttributes().get("name").toString();
+		if ((u = userRepository.findByName(firstName)) == null) {
 			String email = authenticationToken.getPrincipal().getAttributes().get("email").toString();
 			String token = auth2AuthorizedClient.getAccessToken().getTokenValue();
 			User user = new User().id(IdGeneration.getNextRandomString()).email(email).name(firstName).google_account(true).google_token(token).is_in(true).is_active(true);		
@@ -73,9 +76,14 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 				if(responseEntity.hasBody())
 				{
 					List<GoogleEvent> events = responseEntity.getBody().getItems();
-					events.forEach((e) -> {
-						System.out.println("summery : "+e.getSummary());
-					});
+					// events.forEach((e) -> {
+					// 	System.out.println("summery : "+e.getStart() != null ? e.getStart().getDateTime() : "null");
+					// });
+					eventRepo.saveAll(events.stream().map((e)->{
+						Event event = new Event().summery(e.getSummary()).title(e.getSummary()).start(e.getStart() != null ? e.getStart().getDateTime() : "null").end(e.getEnd() != null ? e.getEnd().getDateTime() : "null").user(userRepository.findById(u.getId()).get()).id(IdGeneration.getNextRandomString());
+						
+						return event;
+					}).collect(Collectors.toList()));
 				}
 			
 		}

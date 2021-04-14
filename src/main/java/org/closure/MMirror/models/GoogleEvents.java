@@ -3,6 +3,8 @@ package org.closure.MMirror.models;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import org.closure.MMirror.models.google_event.GoogleEvent;
+
 public class GoogleEvents {
     private String kind;
     private String etag;

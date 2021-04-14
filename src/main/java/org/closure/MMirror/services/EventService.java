@@ -46,7 +46,8 @@ public class EventService {
     public List<EventDto> getEvents(String userID) throws UserException
     {
        List<String> eventIds = userRepo.findById(userID).orElseThrow(()-> new UserException("no user with this id...")).getEvents().stream().map((e)-> e.getId()).collect(Collectors.toList());
-       return  IteratorUtils.toList(eventRepo.findAllById(eventIds).iterator()).stream().map((e)-> new EventDto().end(e.getEnd().toString()).id(e.getId()).start(e.getStart().toString()).title(e.getTitle()).summery(e.getSummery())).collect(Collectors.toList());
+       return  IteratorUtils.toList(eventRepo.findAllById(eventIds).iterator()).stream().map((e)-> new EventDto().end(e.getEnd()).id(e.getId()).start(e.getStart()).title(e.getTitle()).summery(e.getSummery())).collect(Collectors.toList());
+    //    return  IteratorUtils.toList(eventRepo.findAllById(eventIds).iterator()).stream().map((e)-> new EventDto().end(e.getEnd().toString()).id(e.getId()).start(e.getStart().toString()).title(e.getTitle()).summery(e.getSummery())).collect(Collectors.toList());
        // return eventRepo.findAllById(eventIds).iterator().forEachRemaining((new ArrayList<String>())::add);
     }
 

@@ -122,18 +122,19 @@ public class ViewController {
     }
 
     @PostMapping(value = "/occupid")
-    public void occupidCode(CodeDto code, HttpServletResponse response, HttpServletRequest request) {
+    public String occupidCode(CodeDto code, HttpServletResponse response, HttpServletRequest request, Model model) {
         try {
             if (codeService.occupidCode(request.getSession().getAttribute("clientID") + "", code.getCode())) {
-                response.sendRedirect("/events");
+                return "redirect:/events";
+            } else {
+                model.addAttribute("codeError", "something went wrong");
+                return "redirect:/verfication_code";
             }
-        } catch (UserException | CodeException | IOException e) {
-            try {
-                request.getSession().setAttribute("codeError", "enter valid code");
-                response.sendRedirect("/verfication_code");
-            } catch (IOException e1) {
+        } catch (UserException | CodeException e) {
 
-            }
+            model.addAttribute("codeError", "enter valid code");
+            return "/verfication_code";
+
         }
     }
 
@@ -158,14 +159,14 @@ public class ViewController {
     }
 
     @PostMapping(value = "/add_event_process")
-    public String addEvent(EventDto event, HttpServletRequest request, HttpServletResponse response,Model model) {
+    public String addEvent(EventDto event, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
 
             event = eventService.addEvent(request.getSession().getAttribute("clientID") + "", event);
             return "redirect:/events";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            return "redirect:/addevent";
+            return "add_event";
         }
     }
 
