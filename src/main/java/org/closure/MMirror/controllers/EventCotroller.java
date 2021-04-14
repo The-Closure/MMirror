@@ -34,7 +34,7 @@ public class EventCotroller {
     } 
     
     @RequestMapping("/getevents/{userID}")
-    public ResponseEntity getEvents(@PathVariable String userID)
+    public ResponseEntity<Object> getEvents(@PathVariable String userID)
     {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(eventService.getEvents(userID));

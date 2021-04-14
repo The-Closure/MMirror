@@ -1,9 +1,7 @@
 package org.closure.MMirror.models;
 
-import java.util.Date;
 import java.util.Objects;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 public class EventDto {
 

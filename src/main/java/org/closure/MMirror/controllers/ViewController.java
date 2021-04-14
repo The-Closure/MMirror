@@ -6,42 +6,27 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.closure.MMirror.Exceptions.CodeException;
 import org.closure.MMirror.Exceptions.UserException;
-import org.closure.MMirror.entities.Code;
-import org.closure.MMirror.entities.Event;
 import org.closure.MMirror.entities.User;
 import org.closure.MMirror.models.CodeDto;
 import org.closure.MMirror.models.EventDto;
 import org.closure.MMirror.models.UserDto;
-import org.closure.MMirror.repositories.EventRepo;
-import org.closure.MMirror.repositories.UserRepo;
 import org.closure.MMirror.services.CodeService;
 import org.closure.MMirror.services.EventService;
 import org.closure.MMirror.services.IdGeneration;
 import org.closure.MMirror.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
-import org.w3c.dom.events.EventException;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
 public class ViewController {
-    @Autowired
-    private UserRepo userRepo;
 
     @Autowired
     private UserService UserService;
