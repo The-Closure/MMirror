@@ -47,6 +47,6 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 closure: 
   codeGenerationError: "something went wrong while generationg your code, be  calm we are working on it."

@@ -61,27 +61,32 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 			String token = auth2AuthorizedClient.getAccessToken().getTokenValue();
 			User user = new User().id(IdGeneration.getNextRandomString()).email(email).name(firstName).google_account(true).google_token(token).is_in(true).is_active(true);		
 			u = userRepository.save(user);
+		}
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.add("Authorization", "Bearer " + auth2AuthorizedClient.getAccessToken().getTokenValue());
 			httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 			RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<GoogleEvents> responseEntity = restTemplate.exchange("https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        	ResponseEntity<GoogleEvents> responseEntity = restTemplate.exchange("https://www.googleapis.com/calendar/v3/calendars/primary/events",
                 HttpMethod.GET, httpEntity, GoogleEvents.class);
 				if(responseEntity.hasBody())
 				{
 					List<GoogleEvent> events = responseEntity.getBody().getItems();
 					// events.forEach((e) -> {
 					// 	System.out.println("summery : "+e.getStart() != null ? e.getStart().getDateTime() : "null");
-					// });
-					eventRepo.saveAll(events.stream().map((e)->{
-						Event event = new Event().summery(e.getSummary()).title(e.getSummary()).start(e.getStart() != null ? e.getStart().getDateTime() : "null").end(e.getEnd() != null ? e.getEnd().getDateTime() : "null").user(userRepository.findById(u.getId()).get()).id(IdGeneration.getNextRandomString());
+					// });		
+					List<GoogleEvent> newEvents = events.stream().filter(
+					(e)-> eventRepo.findById(e.getId()).isEmpty()	
+					).toList();
+					System.out.println("new events here : ");
+					newEvents.forEach(System.out::println);
+					eventRepo.saveAll(newEvents.stream().map((e)->{
+						Event event = new Event().summery(e.getSummary()).title(e.getSummary()).start(e.getStart() != null ? e.getStart().getDateTime() : "null").end(e.getEnd() != null ? e.getEnd().getDateTime() : "null").user(userRepository.findById(u.getId()).get()).id(e.getId());
 						
 						return event;
 					}).collect(Collectors.toList()));
 				}
 			
-		}
 		request.getSession().setAttribute("clientID", u.getId());
 		this.redirectStrategy.sendRedirect(request, response,"/events");
 	}
