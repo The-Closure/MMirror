@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EventRepo extends PagingAndSortingRepository<Event, String> {
     public List<Event> findAllByUser(User user);
+    public void deleteAllByUser(User user);
 }

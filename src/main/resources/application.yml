@@ -27,7 +27,7 @@ spring:
           google:
             client-id: 965999691956-p90targvpar84ahoppos3c11lqcab4e8.apps.googleusercontent.com
             client-secret: eioNq1OB9uWoWVkxwScSu40u
-            scope: profile,email,https://www.googleapis.com/auth/calendar
+            scope: profile,email,https://www.googleapis.com/auth/calendar,https://www.googleapis.com/auth/calendar.events
             client-name: MMirror_App
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mmirror?createDatabaseIfNotExist=true

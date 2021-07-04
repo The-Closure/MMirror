@@ -30,6 +30,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -51,6 +52,7 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
 
 	User u = null;
+	@Transactional
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 	Authentication authentication) throws IOException, ServletException {
 		OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
@@ -59,9 +61,12 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 		if ((u = userRepository.findByName(firstName)) == null) {
 			String email = authenticationToken.getPrincipal().getAttributes().get("email").toString();
 			String token = auth2AuthorizedClient.getAccessToken().getTokenValue();
+			System.out.println("Token :: " + token);
 			User user = new User().id(IdGeneration.getNextRandomString()).email(email).name(firstName).google_account(true).google_token(token).is_in(true).is_active(true);		
 			u = userRepository.save(user);
 		}
+		u.setGoogle_token(auth2AuthorizedClient.getAccessToken().getTokenValue());
+		userRepository.save(u);
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.add("Authorization", "Bearer " + auth2AuthorizedClient.getAccessToken().getTokenValue());
 			httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -71,16 +76,14 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 HttpMethod.GET, httpEntity, GoogleEvents.class);
 				if(responseEntity.hasBody())
 				{
+					eventRepo.deleteAllByUser(u);
 					List<GoogleEvent> events = responseEntity.getBody().getItems();
 					// events.forEach((e) -> {
 					// 	System.out.println("summery : "+e.getStart() != null ? e.getStart().getDateTime() : "null");
 					// });		
-					List<GoogleEvent> newEvents = events.stream().filter(
-					(e)-> eventRepo.findById(e.getId()).isEmpty()	
-					).toList();
 					System.out.println("new events here : ");
-					newEvents.forEach(System.out::println);
-					eventRepo.saveAll(newEvents.stream().map((e)->{
+					events.forEach(System.out::println);
+					eventRepo.saveAll(events.stream().map((e)->{
 						Event event = new Event().summery(e.getSummary()).title(e.getSummary()).start(e.getStart() != null ? e.getStart().getDateTime() : "null").end(e.getEnd() != null ? e.getEnd().getDateTime() : "null").user(userRepository.findById(u.getId()).get()).id(e.getId());
 						
 						return event;
