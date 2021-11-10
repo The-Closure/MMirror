@@ -53,7 +53,7 @@ public class EventService {
             Event entity = new Event().id(IdGeneration.getNextRandomString()).summery(event.getSummery())
                     .title(event.getTitle()).user(user).start(event.getStart()).end(event.getEnd());
             entity = eventRepo.save(entity);
-            return event.id(entity.getId());
+            return event.id(entity.getId()).user_id(userID).user_name(user.getName());
         } else {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("Authorization", "Bearer " + user.getGoogle_token());

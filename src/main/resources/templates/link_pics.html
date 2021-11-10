@@ -1,0 +1,114 @@
+<html>
+<header>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+  <title>welcome to magic mirror</title>
+  <style type="text/css">
+    .field {
+      margin: 5% 0px 0px 0px;
+    }
+
+    #customBtn {
+      display: inline-block;
+      background: white;
+      color: #444;
+      width: 190px;
+      border-radius: 5px;
+      border: thin solid #888;
+      box-shadow: 1px 1px 1px grey;
+      white-space: nowrap;
+    }
+
+    #customBtn:hover {
+      cursor: pointer;
+    }
+
+    span.label {
+      font-family: serif;
+      font-weight: normal;
+    }
+
+    span.icon {
+      background: url('/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
+      display: inline-block;
+      vertical-align: middle;
+      width: 42px;
+      height: 42px;
+    }
+
+    span.buttonText {
+      display: inline-block;
+      vertical-align: middle;
+      padding-left: 42px;
+      padding-right: 42px;
+      font-size: 14px;
+      font-weight: bold;
+      /* Use the Roboto font that is loaded in the <head> */
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</header>
+
+<body>
+  <nav class="navbar" style="background-color: #FF5722;">
+    <div class="navbar-brand">
+    </div>
+    <div id="my-navbar-menu" class="navbar-menu">
+      <div class="navbar-start">
+      </div>
+      <div class="my-navbar-center">
+        <div class="navbar-item">
+          <h3 class="title" style="color: white;">Magic Mirror</h3>
+        </div>
+      </div>
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+  <div class="columns is-12" style="text-align: center;">
+    <div class="column">
+      <h4 class="title">Link Mirror</h4>
+      <div class="columns is-12">
+        <div class="column is-2"></div>
+
+        <div class="column is-8">
+          <div class="card block">
+
+            <div class="card-content">
+              <form th:method="POST" th:action="@{/uploadImagesProcess}" enctype="multipart/form-data">
+                <div class="field">
+                  <!-- <p class="control has-icons-left">
+                    <input class="input" type="text" th:field="*{id}" placeholder="mirror id">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-lock"></i>
+                    </span>
+                  </p> -->
+                 
+                    <input
+                      class="input" name="file" type="file" id="formFile" multiple><br />
+                </div>
+                <div class="control">
+                  <button type="submit" class="button is-link" style="width: 100%; background-color: #FF5722;">
+                    <h4 class="subtitle is-4" style="color: white;">link with mirror</h4>
+                  </button>
+
+                </div>
+              </form>
+
+              <p th:text="${error}"></p>
+
+            </div>
+
+            <div class="content">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-2"></div>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

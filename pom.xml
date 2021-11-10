@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.closure</groupId>
 	<artifactId>MMirror</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.7demo</version>
 	<name>MMirror</name>
 	<description>backend application to support our magic mirror devices around the world </description>
 	<properties>
@@ -88,6 +88,11 @@
 			<artifactId>bootstrap</artifactId>
 			<version>4.3.1</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>org.mnode.ical4j</groupId>
+			<artifactId>ical4j</artifactId>
+			<version>4.0.0-alpha8</version>
+			</dependency> -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator-core</artifactId>

@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-
 @Component("oauth2authSuccessHandler")
 public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -46,52 +45,54 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 	@Autowired
 	private EventRepo eventRepo;
 
-
-	
-	
-
-
 	User u = null;
+
 	@Transactional
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-	Authentication authentication) throws IOException, ServletException {
+			Authentication authentication) throws IOException, ServletException {
 		OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
 		String firstName = authenticationToken.getPrincipal().getAttributes().get("name").toString();
-		OAuth2AuthorizedClient auth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(authenticationToken.getAuthorizedClientRegistrationId(), authenticationToken.getPrincipal().getName());
+		OAuth2AuthorizedClient auth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(
+				authenticationToken.getAuthorizedClientRegistrationId(), authenticationToken.getPrincipal().getName());
 		if ((u = userRepository.findByName(firstName)) == null) {
 			String email = authenticationToken.getPrincipal().getAttributes().get("email").toString();
 			String token = auth2AuthorizedClient.getAccessToken().getTokenValue();
 			System.out.println("Token :: " + token);
-			User user = new User().id(IdGeneration.getNextRandomString()).email(email).name(firstName).google_account(true).google_token(token).is_in(true).is_active(true);		
+			User user = new User().id(IdGeneration.getNextRandomString()).email(email).name(firstName)
+					.google_account(true).google_token(token).is_in(true).is_active(true).password("");
 			u = userRepository.save(user);
 		}
 		u.setGoogle_token(auth2AuthorizedClient.getAccessToken().getTokenValue());
 		userRepository.save(u);
-			HttpHeaders httpHeaders = new HttpHeaders();
-			httpHeaders.add("Authorization", "Bearer " + auth2AuthorizedClient.getAccessToken().getTokenValue());
-			httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-			HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-			RestTemplate restTemplate = new RestTemplate();
-        	ResponseEntity<GoogleEvents> responseEntity = restTemplate.exchange("https://www.googleapis.com/calendar/v3/calendars/primary/events",
-                HttpMethod.GET, httpEntity, GoogleEvents.class);
-				if(responseEntity.hasBody())
-				{
-					eventRepo.deleteAllByUser(u);
-					List<GoogleEvent> events = responseEntity.getBody().getItems();
-					// events.forEach((e) -> {
-					// 	System.out.println("summery : "+e.getStart() != null ? e.getStart().getDateTime() : "null");
-					// });		
-					System.out.println("new events here : ");
-					events.forEach(System.out::println);
-					eventRepo.saveAll(events.stream().map((e)->{
-						Event event = new Event().summery(e.getSummary()).title(e.getSummary()).start(e.getStart() != null ? e.getStart().getDateTime() : "null").end(e.getEnd() != null ? e.getEnd().getDateTime() : "null").user(userRepository.findById(u.getId()).get()).id(e.getId());
-						
-						return event;
-					}).collect(Collectors.toList()));
-				}
-			
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + auth2AuthorizedClient.getAccessToken().getTokenValue());
+		httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<GoogleEvents> responseEntity = restTemplate.exchange(
+				"https://www.googleapis.com/calendar/v3/calendars/primary/events", HttpMethod.GET, httpEntity,
+				GoogleEvents.class);
+		if (responseEntity.hasBody()) {
+			eventRepo.deleteAllByUser(u);
+			List<GoogleEvent> events = responseEntity.getBody().getItems();
+			// events.forEach((e) -> {
+			// System.out.println("summery : "+e.getStart() != null ?
+			// e.getStart().getDateTime() : "null");
+			// });
+			System.out.println("new events here : ");
+			events.forEach(System.out::println);
+			eventRepo.saveAll(events.stream().map((e) -> {
+				Event event = new Event().summery(e.getSummary()).title(e.getSummary())
+						.start(e.getStart() != null ? e.getStart().getDateTime() : "null")
+						.end(e.getEnd() != null ? e.getEnd().getDateTime() : "null")
+						.user(userRepository.findById(u.getId()).get()).id(e.getId());
+
+				return event;
+			}).collect(Collectors.toList()));
+		}
+
 		request.getSession().setAttribute("clientID", u.getId());
-		this.redirectStrategy.sendRedirect(request, response,"/events");
+		this.redirectStrategy.sendRedirect(request, response, "/events");
 	}
-	
+
 }

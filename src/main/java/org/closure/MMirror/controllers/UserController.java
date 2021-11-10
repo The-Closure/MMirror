@@ -10,6 +10,7 @@ import org.closure.MMirror.models.UserDto;
 import org.closure.MMirror.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +31,14 @@ public class UserController {
     UserService userService;
 
     @PostMapping(value="/register")
-    public ResponseEntity<String> postMethodName
+    public ResponseEntity<Object> postMethodName
     (
         @RequestBody UserDto request
     ) 
     {    try {
         
         request = userService.addUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(request.toString());
+        return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(request.toString());
         
     } catch (UserException error) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());

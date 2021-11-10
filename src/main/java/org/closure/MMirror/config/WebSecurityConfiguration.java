@@ -67,7 +67,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource).passwordEncoder(getPasswordEncoder());
     }
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         DelegatingPasswordEncoder encoder =  (DelegatingPasswordEncoder)PasswordEncoderFactories.createDelegatingPasswordEncoder();

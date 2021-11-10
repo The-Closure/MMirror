@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import org.closure.MMirror.Exceptions.UserException;
 import org.closure.MMirror.entities.User;
+import org.closure.MMirror.models.MirrorDto;
 import org.closure.MMirror.models.UserDto;
 import org.closure.MMirror.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,7 @@ public class UserService {
             // TODO : ACTIVE IT IN PRODUCTION
             return new UserDto().created_at(entity.getCreated_at()).email(entity.getEmail()).is_active(false)
                     .password(entity.getPassword()).name(entity.getName())
-
-                    .password(entity.getPassword());
+                    .password(entity.getPassword()).id(entity.getId());
 
         } else {
             throw new UserException("this email is already exist ...");
@@ -78,10 +78,20 @@ public class UserService {
 
         msg.setSubject("Verfication mail (Magic Mirror)");
         msg.setText(
-                "thanks for joining our platform \nplease verify your account by this link : https://localhost:8080/api/v2/users/home/verifyaccount/"
+                "thanks for joining our platform \nplease verify your account by this link : http://magicm.hi-do.eu:8080/api/v2/users/home/verifyaccount/"
                         + userID);
 
         javaMailSender.send(msg);
     }
 
+    public boolean isLinkedWithMirror(String userId)
+    {
+        System.out.println(userRepo.findById(userId).get().getMirror() != null);
+        return userRepo.findById(userId).get().getMirror() != null;
+    }
+
+    public MirrorDto getUserIdWithMirrorId(String userId)
+    {
+        return new MirrorDto().userId(userId).id(userRepo.findById(userId).get().getMirror().getId());
+    }
 }

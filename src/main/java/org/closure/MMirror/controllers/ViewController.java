@@ -12,10 +12,13 @@ import org.closure.MMirror.Exceptions.UserException;
 import org.closure.MMirror.entities.User;
 import org.closure.MMirror.models.CodeDto;
 import org.closure.MMirror.models.EventDto;
+import org.closure.MMirror.models.MirrorDto;
 import org.closure.MMirror.models.UserDto;
+import org.closure.MMirror.repositories.UserRepo;
 import org.closure.MMirror.services.CodeService;
 import org.closure.MMirror.services.EventService;
 import org.closure.MMirror.services.IdGeneration;
+import org.closure.MMirror.services.MirrorService;
 import org.closure.MMirror.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,19 +26,27 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 
 @Controller
 @RequestMapping("/")
 public class ViewController {
 
     @Autowired
-    private UserService UserService;
+    private UserService userService;
 
     @Autowired
     private EventService eventService;
 
     @Autowired
     private CodeService codeService;
+
+    @Autowired
+    private MirrorService mirrorService;
 
     @GetMapping("/")
     public String viewHomePage(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -55,7 +66,7 @@ public class ViewController {
                 .google_account(false);
         try {
 
-            UserService.addUser(new UserDto().name(user.getName()).email(user.getEmail()).password(user.getPassword())
+            userService.addUser(new UserDto().name(user.getName()).email(user.getEmail()).password(user.getPassword())
                     .id(user.getId()));
         } catch (UserException e) {
             model.addAttribute("error", e.getMessage());
@@ -85,7 +96,7 @@ public class ViewController {
     public String loginProcess(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
         UserDto dto = new UserDto();
         try {
-            dto = UserService.signin(user.getEmail(), user.getPassword());
+            dto = userService.signin(user.getEmail(), user.getPassword());
         } catch (UserException e) {
             model.addAttribute("error", e.getMessage());
             return "home";
@@ -161,6 +172,41 @@ public class ViewController {
         return "add_event";
     }
 
+    @GetMapping(value="/linkMirror")
+    public String linkMirror(Model model,HttpServletRequest request) {
+        model.addAttribute("mirror", new MirrorDto());
+        if (request.getSession().getAttribute("clientID") != null) {
+            if(userService.isLinkedWithMirror(request.getSession().getAttribute("clientID")+""))
+            return "link_pics";
+            else
+            return "link_mirror";
+        } else {
+            model.addAttribute("user", new User());
+            return "redirect:/";
+        }
+    }
+
+    @PostMapping(value="/linkMirrorProcess")
+    public String postMethodName(@RequestBody MirrorDto mirror, HttpServletRequest request,Model model) {
+        try {
+            mirrorService.linkUserWithMirror(request.getSession().getAttribute("clientID")+"" , mirror.getId());
+            return"redirect:/link_pics";
+        } catch (Exception e) {
+           model.addAttribute("error", e.getMessage());
+           return "redirect:/events";
+        }
+    }
+
+    @PostMapping(value="/uploadImagesProcess")
+    public String fileUpload(@RequestParam("file") MultipartFile[] file,  Model model,HttpServletRequest request) throws IOException {
+        MirrorDto mirror = userService.getUserIdWithMirrorId(request.getSession().getAttribute("clientID")+"");
+        mirrorService.multiUpload(file, mirror.getId(), mirror.getUserId());
+        
+        return "redirect:/events";
+    }
+    
+    
+    
     // @GetMapping("/home")
     // public String Home(Model model, HttpSession session) {
     // System.out.println("home : "+ session.getAttribute("clientID"));

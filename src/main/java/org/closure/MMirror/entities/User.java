@@ -33,6 +33,12 @@ public class User {
     private Instant created_at;
     private String google_token;
 
+    @OneToOne
+    private Mirror mirror;
+
+    @OneToMany(mappedBy = "user")
+    private List<Pics> pics;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", targetEntity = Event.class)
     private List<Event> events;
@@ -43,7 +49,7 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String email, String password, boolean google_account, boolean is_active, boolean is_in, Instant created_at, String google_token, List<Event> events, Code code) {
+    public User(String id, String name, String email, String password, boolean google_account, boolean is_active, boolean is_in, Instant created_at, String google_token, Mirror mirror, List<Pics> pics, List<Event> events, Code code) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -53,6 +59,8 @@ public class User {
         this.is_in = is_in;
         this.created_at = created_at;
         this.google_token = google_token;
+        this.mirror = mirror;
+        this.pics = pics;
         this.events = events;
         this.code = code;
     }
@@ -141,6 +149,22 @@ public class User {
         this.google_token = google_token;
     }
 
+    public Mirror getMirror() {
+        return this.mirror;
+    }
+
+    public void setMirror(Mirror mirror) {
+        this.mirror = mirror;
+    }
+
+    public List<Pics> getPics() {
+        return this.pics;
+    }
+
+    public void setPics(List<Pics> pics) {
+        this.pics = pics;
+    }
+
     public List<Event> getEvents() {
         return this.events;
     }
@@ -202,6 +226,16 @@ public class User {
         return this;
     }
 
+    public User mirror(Mirror mirror) {
+        setMirror(mirror);
+        return this;
+    }
+
+    public User pics(List<Pics> pics) {
+        setPics(pics);
+        return this;
+    }
+
     public User events(List<Event> events) {
         setEvents(events);
         return this;
@@ -220,12 +254,12 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && is_active == user.is_active && is_in == user.is_in && Objects.equals(created_at, user.created_at) && Objects.equals(google_token, user.google_token) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && google_account == user.google_account && is_active == user.is_active && is_in == user.is_in && Objects.equals(created_at, user.created_at) && Objects.equals(google_token, user.google_token) && Objects.equals(mirror, user.mirror) && Objects.equals(pics, user.pics) && Objects.equals(events, user.events) && Objects.equals(code, user.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, google_account, is_active, is_in, created_at, google_token, events, code);
+        return Objects.hash(id, name, email, password, google_account, is_active, is_in, created_at, google_token, mirror, pics, events, code);
     }
 
     @Override
@@ -240,6 +274,8 @@ public class User {
             ", is_in='" + isIs_in() + "'" +
             ", created_at='" + getCreated_at() + "'" +
             ", google_token='" + getGoogle_token() + "'" +
+            ", mirror='" + getMirror() + "'" +
+            ", pics='" + getPics() + "'" +
             ", events='" + getEvents() + "'" +
             ", code='" + getCode() + "'" +
             "}";
